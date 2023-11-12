@@ -16,7 +16,7 @@
 
 using namespace std;
 
-string VERSION = "0.0.1.1";
+string VERSION = "0.0.2.1";
 int scanIterator = 0;
 string toKill[32] = {};
 bool scan = true;
@@ -137,7 +137,7 @@ int main(int argc, char* argv[]) {
 \____|__  /__|   |__|/______  /____//____  >/_____ \ |___|  /\____/  |__|_|  /\____/|__|    \___  >
         \/                  \/           \/       \/      \/               \/                   \/
 )" << "ProcessKiller-Recode v" << VERSION << " by Jerzy W (https://github.com/JamJestJerzy)" << endl;
-    //CheckVersion();
+    CheckVersion();
     argparse::ArgumentParser program("ProcessKiller-Recode", VERSION);
 
     program.add_argument("delay").help("Delay between scans.").scan<'i', int>();
@@ -194,6 +194,8 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
+
 
 
 
