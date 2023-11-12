@@ -19,6 +19,36 @@ function Get-Version
     }
 }
 
+# Function to increment version
+function Increment-Version
+{
+    $version = Get-Version
+
+    # Check if version has 3 or 4 digits
+    if ($version -match '^\d+\.\d+\.\d+$') {
+        # Increment the last digit by 0.1
+        $newVersion = [version]$version
+        $newVersion = $newVersion.Major,$newVersion.Minor,($newVersion.Build + 0.1) -join '.'
+    }
+    elseif ($version -match '^\d+\.\d+\.\d+\.\d+$') {
+        # Increment the last digit by 1
+        $newVersion = [version]$version
+        $newVersion = $newVersion.Major,$newVersion.Minor,$newVersion.Build,($newVersion.Revision + 1)
+        $newVersion = $newVersion -join '.'
+    }
+    else {
+        Write-Host "Error: Unsupported version format. Please use a version with 3 or 4 digits."
+        exit 1
+    }
+
+    # Update the version in main.cpp
+    $filePath = "src/main.cpp"
+    (Get-Content -Path $filePath -Raw) -replace 'string VERSION = "(.+?)";', "string VERSION = `"$newVersion`";" | Set-Content -Path $filePath
+
+    # Return the new version
+    return $newVersion
+}
+
 # Function to build the C++ program
 function Build-Program
 {
@@ -32,7 +62,7 @@ function Build-Program
     $cppFiles = Get-ChildItem -Path "src\" -Filter "*.cpp" | ForEach-Object { $_.FullName }
 
     $cppFileList = $cppFiles -join " "
-    $version = Get-Version
+    $version = Increment-Version
     $outputFileName = Join-Path $outputFolder "ProcessKiller-$version.exe"
     $compileCommand = "g++ -o $outputFileName $cppFileList -I.\libcurl\include -L. -lcurl -static-libgcc -static-libstdc++ -static -lpthread -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lwinmm -lmingw32 -lmingwex -lmsvcrt -lmsvcr100 -lversion -lstdc++fs -lws2_32 -lwinhttp -Wcpp -w"
 

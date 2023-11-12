@@ -9,7 +9,7 @@
 
 using namespace std;
 
-string VERSION = "0.0.0.2";
+string VERSION = "0.0.0.4";
 
 void PrintProcessNameAndID( DWORD processID ) {
     TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
@@ -36,11 +36,17 @@ void EnumerateThru() {
 }
 
 int main(int argc, char* argv[]) {
-    cout << argc << endl;
+    cout << argv[0] << endl;
     /*
     while (true) {
         EnumerateThru();
         this_thread::sleep_for(chrono::milliseconds(50));
     }
      */
+    return 0;
 }
+
+
+
+
+
