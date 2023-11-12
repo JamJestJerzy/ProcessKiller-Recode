@@ -5,8 +5,11 @@
 #include <string>
 #include <thread>
 #include <algorithm>
+#include <iostream>
 
-std::string VERSION = "0.0.0.1";
+using namespace std;
+
+string VERSION = "0.0.0.2";
 
 void PrintProcessNameAndID( DWORD processID ) {
     TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
@@ -33,12 +36,11 @@ void EnumerateThru() {
 }
 
 int main(int argc, char* argv[]) {
-
-
+    cout << argc << endl;
     /*
     while (true) {
         EnumerateThru();
-        std::this_thread::sleep_for(std::chrono::milliseconds(50));
+        this_thread::sleep_for(chrono::milliseconds(50));
     }
      */
 }
