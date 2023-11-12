@@ -1,13 +1,14 @@
 # About
 > Program to terminate every instance of unwanted processes.<br>
-> Orginally made terminate malicious (for me and classmates) scripts on school laptops.<br>
+> Orginally made to terminate malicious (for me and classmates) scripts on school laptops.<br>
 > I couldn't find any project like, so I made this.<br>
-> This is my first functioning program in ```C++``` 
+> This is my first functioning program in ```C++```<br>
+> First versions: https://github.com/JamJestJerzy/ProcessKiller
 # Usage
 > - Open `terminal`/`powershell`/`cp` in directory with Program's binary
 > - Run binary from console (```{name}.exe```) with positional argument ```delay - Delay between scans.```:
 > ```console
-> PS C:\Users\JamJestJerzy> .\ProcessKiller-0.0.1.2.exe 50
+> PS C:\Users\JamJestJerzy> .\ProcessKiller-0.0.0.0.exe 50
 >    _____          __ ________
 >   /  _  \________/  |\_____  \ __ __  ______________   ____   ____     _____   ___________   ____
 >  /  /_\  \_  __ \   __\_(__  <|  |  \/  ___/\___   /  /    \ /  _ \   /     \ /  _ \_  __ \_/ __ \
@@ -29,7 +30,7 @@
 > ```
 > - Run program again:
 > ```console
-> PS C:\Users\JamJestJerzy> .\ProcessKiller-0.0.1.2.exe 50
+> PS C:\Users\JamJestJerzy> .\ProcessKiller-0.0.0.0.exe 50
 >    _____          __ ________
 >   /  _  \________/  |\_____  \ __ __  ______________   ____   ____     _____   ___________   ____
 >  /  /_\  \_  __ \   __\_(__  <|  |  \/  ___/\___   /  /    \ /  _ \   /     \ /  _ \_  __ \_/ __ \
@@ -48,7 +49,7 @@
 > - Program is now ready to terminate unwanted processes!
 > - You can also check what args you have avaiable by ```--help``` flag:
 > ```console
-> PS C:\Users\JamJestJerzy> .\ProcessKiller-0.0.1.2.exe 50
+> PS C:\Users\JamJestJerzy> .\ProcessKiller-0.0.0.0.exe 50
 >    _____          __ ________
 >   /  _  \________/  |\_____  \ __ __  ______________   ____   ____     _____   ___________   ____
 >  /  /_\  \_  __ \   __\_(__  <|  |  \/  ___/\___   /  /    \ /  _ \   /     \ /  _ \_  __ \_/ __ \
