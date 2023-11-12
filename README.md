@@ -4,22 +4,68 @@
 > I couldn't find any project like, so I made this.<br>
 > This is my first functioning program in ```C++``` 
 # Usage
-Run `.exe` file as every other program. On first run it'll generate config file.<br>
-Write to this file filenames of processes you want to kill. 1 filename for line<br>
-> Example:
->
+> - Open `terminal`/`powershell`/`cp` in directory with Program's binary
+> - Run binary from console (```{name}.exe```) with positional argument ```delay - Delay between scans.```:
+> ```console
+> PS C:\Users\JamJestJerzy> .\ProcessKiller-0.0.1.2.exe 50
+>    _____          __ ________
+>   /  _  \________/  |\_____  \ __ __  ______________   ____   ____     _____   ___________   ____
+>  /  /_\  \_  __ \   __\_(__  <|  |  \/  ___/\___   /  /    \ /  _ \   /     \ /  _ \_  __ \_/ __ \
+> /    |    \  | \/|  | /       \  |  /\___ \  /    /  |   |  (  <_> ) |  Y Y  (  <_> )  | \/\  ___/
+> \____|__  /__|   |__|/______  /____//____  >/_____ \ |___|  /\____/  |__|_|  /\____/|__|    \___  >
+>         \/                  \/           \/       \/      \/               \/                   \/
+> ProcessKiller-Recode v0.0.0.0 by Jerzy W (https://github.com/JamJestJerzy)
+> [!] Created config file.
+> ```
+> - Program will generate config file for you.
+> - Fill this file with exe names (CaSe SeNsItIvE) of processes you want to terminate:
 > ```properties
-> # Comment or smth
+> # Comment
 > Never.exe
 > Gonna.exe
 > Give.exe
 > You.exe
 > Up.exe
+> ```
+> - Run program again:
+> ```console
+> PS C:\Users\JamJestJerzy> .\ProcessKiller-0.0.1.2.exe 50
+>    _____          __ ________
+>   /  _  \________/  |\_____  \ __ __  ______________   ____   ____     _____   ___________   ____
+>  /  /_\  \_  __ \   __\_(__  <|  |  \/  ___/\___   /  /    \ /  _ \   /     \ /  _ \_  __ \_/ __ \
+> /    |    \  | \/|  | /       \  |  /\___ \  /    /  |   |  (  <_> ) |  Y Y  (  <_> )  | \/\  ___/
+> \____|__  /__|   |__|/______  /____//____  >/_____ \ |___|  /\____/  |__|_|  /\____/|__|    \___  >
+>         \/                  \/           \/       \/      \/               \/                   \/
+> ProcessKiller-Recode v0.0.0.0 by Jerzy W (https://github.com/JamJestJerzy)
+> Blacklisted processes:
 > Never.exe
 > Gonna.exe
-> Let.exe
+> Give.exe
 > You.exe
-> Down.exe
+> Up.exe
+> Scanning processes with 50ms delay.
+> ```
+> - Program is now ready to terminate unwanted processes!
+> - You can also check what args you have avaiable by ```--help``` flag:
+> ```console
+> PS C:\Users\JamJestJerzy> .\ProcessKiller-0.0.1.2.exe 50
+>    _____          __ ________
+>   /  _  \________/  |\_____  \ __ __  ______________   ____   ____     _____   ___________   ____
+>  /  /_\  \_  __ \   __\_(__  <|  |  \/  ___/\___   /  /    \ /  _ \   /     \ /  _ \_  __ \_/ __ \
+> /    |    \  | \/|  | /       \  |  /\___ \  /    /  |   |  (  <_> ) |  Y Y  (  <_> )  | \/\  ___/
+> \____|__  /__|   |__|/______  /____//____  >/_____ \ |___|  /\____/  |__|_|  /\____/|__|    \___  >
+>         \/                  \/           \/       \/      \/               \/                   \/
+> ProcessKiller-Recode v0.0.0.0 by Jerzy W (https://github.com/JamJestJerzy)
+> Usage: ProcessKiller-Recode [--help] [--version] [--debug] [--log] delay
+> 
+> Positional arguments:
+>   delay          Delay between scans.
+> 
+> Optional arguments:
+>   -h, --help     shows help message and exits
+>   -v, --version  prints version information and exits
+>   --debug        Enabled debug output
+>   --log          Logs every process. Spams terminal a lot. Trust me.
 > ```
 # Compilation
 > - Clone this repository (```git clone https://github.com/JamJestJerzy/ProcessKiller-Recode.git```)<br>

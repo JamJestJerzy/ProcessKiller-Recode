@@ -6,15 +6,17 @@
 #include <thread>
 #include <iostream>
 #include <map>
-#include "argparse.hpp"
 #include <winhttp.h>
 #include <fstream>
+#include <Tlhelp32.h>
+#include <winbase.h>
+#include "argparse.hpp"
 
 #pragma comment(lib, "winhttp.lib")
 
 using namespace std;
 
-string VERSION = "0.0.1.0";
+string VERSION = "0.0.1.1";
 int scanIterator = 0;
 string toKill[32] = {};
 bool scan = true;
@@ -25,10 +27,26 @@ string RemoveWhiteSpaces(string input) {
     return input;
 }
 
+void KillProcessByName(const string& filename) {
+    HANDLE hSnapShot = CreateToolhelp32Snapshot(TH32CS_SNAPALL, 0);
+    PROCESSENTRY32 pEntry; pEntry.dwSize = sizeof (pEntry); BOOL hRes = Process32First(hSnapShot, &pEntry);
+    while (hRes) {
+        if (pEntry.szExeFile == filename) {
+            HANDLE hProcess = OpenProcess(PROCESS_TERMINATE, 0, (DWORD) pEntry.th32ProcessID);
+            if (hProcess != nullptr) {
+                TerminateProcess(hProcess, 9);
+                CloseHandle(hProcess);
+            }
+        }
+        hRes = Process32Next(hSnapShot, &pEntry);
+    }
+    CloseHandle(hSnapShot);
+}
+
 void PrintProcessNameAndID(DWORD processID, bool extensiveLogging) {
     TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
     HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processID);
-    if (hProcess != NULL) {
+    if (hProcess != nullptr) {
         HMODULE hMod;
         DWORD cbNeeded;
         if (EnumProcessModulesEx(hProcess, &hMod, sizeof(hMod),&cbNeeded, LIST_MODULES_ALL))
@@ -43,6 +61,7 @@ void PrintProcessNameAndID(DWORD processID, bool extensiveLogging) {
             processToKill = RemoveWhiteSpaces(processToKill);
             if (processToKill == processName) {
                 cout << "[!] Found " << processToKill << "!" << endl;
+                KillProcessByName(processToKill);
             }
         }
     }
@@ -72,7 +91,7 @@ void CheckVersion() {
     if (bResults) {
         do {
             dwSize = 0;
-            if (!WinHttpQueryDataAvailable(hRequest, &dwSize)) printf("Error %u in WinHttpQueryDataAvailable.\n", GetLastError());
+            if (!WinHttpQueryDataAvailable(hRequest, &dwSize)) printf("Error %lu in WinHttpQueryDataAvailable.\n", GetLastError());
             pszOutBuffer = new char[dwSize + 1];
             if (!pszOutBuffer) {
                 printf("Out of memory\n");
@@ -175,5 +194,6 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
 
 
