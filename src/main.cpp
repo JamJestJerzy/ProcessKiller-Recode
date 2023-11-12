@@ -8,13 +8,24 @@
 #include <map>
 #include "argparse.hpp"
 #include <winhttp.h>
+#include <fstream>
+
 #pragma comment(lib, "winhttp.lib")
 
 using namespace std;
 
-string VERSION = "0.0.0.29";
+string VERSION = "0.0.1.0";
+int scanIterator = 0;
+string toKill[32] = {};
+bool scan = true;
+string configFile = "blacklist.proc";
 
-void PrintProcessNameAndID( DWORD processID ) {
+string RemoveWhiteSpaces(string input) {
+    input.erase(std::remove_if(input.begin(), input.end(), [](char c) {return std::isspace(static_cast<unsigned char>(c));}), input.end());
+    return input;
+}
+
+void PrintProcessNameAndID(DWORD processID, bool extensiveLogging) {
     TCHAR szProcessName[MAX_PATH] = TEXT("<unknown>");
     HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processID);
     if (hProcess != NULL) {
@@ -23,25 +34,36 @@ void PrintProcessNameAndID( DWORD processID ) {
         if (EnumProcessModulesEx(hProcess, &hMod, sizeof(hMod),&cbNeeded, LIST_MODULES_ALL))
             GetModuleBaseName(hProcess, hMod, szProcessName, sizeof(szProcessName)/sizeof(TCHAR));
     }
-    _tprintf( TEXT("%s  (PID: %lu)\n"), szProcessName, processID );
+    string processName = (string)szProcessName;
+    if (processName != "<unknown>") {
+        if (extensiveLogging) cout << processName << endl;
+        scanIterator++;
+        for (string processToKill : toKill) {
+            if (processToKill.empty()) continue;
+            processToKill = RemoveWhiteSpaces(processToKill);
+            if (processToKill == processName) {
+                cout << "[!] Found " << processToKill << "!" << endl;
+            }
+        }
+    }
     CloseHandle( hProcess );
 }
 
-void EnumerateThru() {
-    DWORD aProcesses[1024], cbNeeded, cProcesses;
+void ScanForProcesses(bool extensiveLogging) {
+    DWORD aProcesses[2048], cbNeeded, cProcesses;
     unsigned int i;
 
     if (!EnumProcesses(aProcesses, sizeof(aProcesses), &cbNeeded)) return;
     cProcesses = cbNeeded / sizeof(DWORD);
     for ( i = 0; i < cProcesses; i++ )
         if( aProcesses[i] != 0 )
-            PrintProcessNameAndID( aProcesses[i] );
+            PrintProcessNameAndID(aProcesses[i], extensiveLogging);
 }
 
-void checkVersion() {
+void CheckVersion() {
     DWORD dwSize = 0; DWORD dwDownloaded = 0; LPSTR pszOutBuffer; BOOL bResults = FALSE; HINTERNET hSession = nullptr, hConnect = nullptr, hRequest = nullptr;
     std::string extractedVersion;
-    hSession = WinHttpOpen(L"WinHTTP SESSIONKILLER", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
+    hSession = WinHttpOpen(L"WinHTTP SESSIONKILLER-RECODE", WINHTTP_ACCESS_TYPE_DEFAULT_PROXY, WINHTTP_NO_PROXY_NAME, WINHTTP_NO_PROXY_BYPASS, 0);
     if (hSession) hConnect = WinHttpConnect(hSession, L"api.j3rzy.dev", INTERNET_DEFAULT_HTTP_PORT, 0);
     if (hConnect) hRequest = WinHttpOpenRequest(hConnect, L"GET", L"/versions/processkiller-recode", nullptr, WINHTTP_NO_REFERER, WINHTTP_DEFAULT_ACCEPT_TYPES, 0);
     if (hRequest) bResults = WinHttpSendRequest(hRequest, WINHTTP_NO_ADDITIONAL_HEADERS, 0, WINHTTP_NO_REQUEST_DATA, 0, 0, 0);
@@ -87,32 +109,71 @@ void checkVersion() {
 }
 
 int main(int argc, char* argv[]) {
+    // Logo
+    cout << R"(
+   _____          __ ________
+  /  _  \________/  |\_____  \ __ __  ______________   ____   ____     _____   ___________   ____
+ /  /_\  \_  __ \   __\_(__  <|  |  \/  ___/\___   /  /    \ /  _ \   /     \ /  _ \_  __ \_/ __ \
+/    |    \  | \/|  | /       \  |  /\___ \  /    /  |   |  (  <_> ) |  Y Y  (  <_> )  | \/\  ___/
+\____|__  /__|   |__|/______  /____//____  >/_____ \ |___|  /\____/  |__|_|  /\____/|__|    \___  >
+        \/                  \/           \/       \/      \/               \/                   \/
+)" << "ProcessKiller-Recode v" << VERSION << " by Jerzy W (https://github.com/JamJestJerzy)" << endl;
+    //CheckVersion();
     argparse::ArgumentParser program("ProcessKiller-Recode", VERSION);
 
     program.add_argument("delay").help("Delay between scans.").scan<'i', int>();
+    program.add_argument("--debug").help("Enabled debug output").flag();
+    program.add_argument("--log").help("Logs every process. Spams terminal a lot. Trust me.").flag();
 
     try { program.parse_args(argc, argv); }
     catch (const std::exception& err) { std::cerr << err.what() << std::endl; std::cerr << program; return 1; }
 
     auto delay = program.get<int>("delay");
-    cout << delay << endl;
+    bool doExtensiveLogging = (program["--log"] == true);
+    bool debugInfo = (program["--debug"] == true);
 
-    checkVersion()
+    /* Getting processes from config file */
+    ifstream config(configFile, std::ios::in | std::ios::binary);
+    if (!config.is_open()) {
+        cout << "[!] Created config file." << endl;
+        ofstream create(configFile);
+        if (!create.is_open()) {
+            cerr << "[X] Error creating config file!" << endl;
+            return 1;
+        }
+        create << "# Never.exe" << endl << "# Gonna.exe" << endl << "# Give.exe" << endl << "# You.exe" << endl << "# Up.exe" << endl << "# Names ARE CaSe SeNsItIvE!" << endl;
+        create.close();
+        return 0;
+    } else {
+        string line; int i = 0; int len = 0;
+        while (getline(config, line)) {
+            if (line.empty()) continue;
+            if (line[0] == '#') continue;
+            toKill[i] = line;
+            i++; len++;
+        }
+        config.close();
+        if (len <= 0) {
+            cout << "Write processes you want to kill to config file." << endl;
+            return 0;
+        }
+    }
 
-    while (true) {
-        EnumerateThru();
-        this_thread::sleep_for(chrono::milliseconds(50));
+    cout << "Blacklisted processes:" << endl;
+    for (string process : toKill) {
+        process = RemoveWhiteSpaces(process);
+        if (process.empty()) continue;
+        cout << process << endl;
+    }
+    cout << "Scanning processes with " << delay << "ms delay." << endl;
+
+    while (scan) {
+        ScanForProcesses(doExtensiveLogging);
+        if (debugInfo) cout << "[?] Scan occured" << endl;
+        this_thread::sleep_for(chrono::milliseconds(delay));
     }
 
     return 0;
 }
-
-
-
-
-
-
-
-
 
 
