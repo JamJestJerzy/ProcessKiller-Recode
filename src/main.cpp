@@ -16,7 +16,7 @@
 
 using namespace std;
 
-string VERSION = "0.0.2.6";
+string VERSION = "0.0.2.9";
 int scanIterator = 0;
 string toKill[32] = {};
 bool scan = true;
@@ -120,14 +120,13 @@ void CheckVersion() {
     if (latestReleaseStr.empty()) return;
     latestReleaseStr.erase(std::remove(latestReleaseStr.begin(), latestReleaseStr.end(), '.'), latestReleaseStr.end());
     currentVersionStr.erase(std::remove(currentVersionStr.begin(), currentVersionStr.end(), '.'), currentVersionStr.end());
-    int latestRelease = std::stoi(latestReleaseStr, nullptr, 10); int currentVersion = std::stoi(VERSION, nullptr, 10);
+    int latestRelease = std::stoi(latestReleaseStr, nullptr, 10);
+    int currentVersion = std::stoi(currentVersionStr, nullptr, 10);
     if (currentVersion == latestRelease) cout << "You are running latest release!" << endl;
     else if (currentVersion < latestRelease) cout << "You are running outdated version of program." << endl
     << "Download latest release at https://github.com/JamJestJerzy/ProcessKiller-Recode/releases/tag/" << latestReleaseTag << endl;
     else cout << "You are running never version than is released." << endl
     << "Any bugs report to issues@j3rzy.dev" << endl;
-    cout << currentVersion << "  " << latestRelease << endl;
-    cout << currentVersionStr << "  " << VERSION << endl;
 }
 
 int main(int argc, char* argv[]) {
@@ -197,5 +196,3 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
-
