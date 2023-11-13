@@ -16,7 +16,7 @@
 
 using namespace std;
 
-string VERSION = "0.0.2.9";
+string VERSION = "0.0.3.0";
 int scanIterator = 0;
 string toKill[32] = {};
 bool scan = true;
