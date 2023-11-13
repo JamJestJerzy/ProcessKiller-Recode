@@ -5,7 +5,7 @@
 > This is my first functioning program in ```C++```<br>
 > First versions: https://github.com/JamJestJerzy/ProcessKiller
 # Usage
-> - Open `terminal`/`powershell`/`cp` in directory with Program's binary
+> - Open `terminal`/`powershell`/`cmd` in directory with Program's binary
 > - Run binary from console (```{name}.exe```) with positional argument ```delay - Delay between scans.```:
 > ```console
 > PS C:\Users\JamJestJerzy> .\ProcessKiller-0.0.0.0.exe 50
@@ -47,7 +47,7 @@
 > Scanning processes with 50ms delay.
 > ```
 > - Program is now ready to terminate unwanted processes!
-> - You can also check what args you have avaiable by ```--help``` flag:
+> - You can also check what args you have avaiable by using ```--help``` flag:
 > ```console
 > PS C:\Users\JamJestJerzy> .\ProcessKiller-0.0.0.0.exe 50
 >    _____          __ ________
