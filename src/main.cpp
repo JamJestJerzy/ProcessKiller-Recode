@@ -16,7 +16,7 @@
 
 using namespace std;
 
-string VERSION = "0.0.2.4";
+string VERSION = "0.0.2.6";
 int scanIterator = 0;
 string toKill[32] = {};
 bool scan = true;
@@ -197,3 +197,5 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
+
+

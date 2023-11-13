@@ -64,7 +64,7 @@ function Build-Program
     $cppFileList = $cppFiles -join " "
     $version = Increment-Version
     $outputFileName = Join-Path $outputFolder "ProcessKiller-$version.exe"
-    $compileCommand = "g++ -o $outputFileName $cppFileList -I.\libcurl\include -L. -lcurl -static-libgcc -static-libstdc++ -static -lpthread -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lwinmm -lmingw32 -lmingwex -lmsvcrt -lmsvcr100 -lversion -lstdc++fs -lws2_32 -lwinhttp -Wcpp -w"
+    $compileCommand = "g++ -o $outputFileName $cppFileList -I.\libcurl\include -L. -static-libgcc -static-libstdc++ -static -lpthread -lkernel32 -luser32 -lgdi32 -lwinspool -lcomdlg32 -ladvapi32 -lshell32 -lole32 -loleaut32 -luuid -lwinmm -lmingw32 -lmingwex -lmsvcrt -lmsvcr100 -lversion -lstdc++fs -lws2_32 -lwinhttp -Wcpp -w"
 
     Invoke-Expression $compileCommand
 
